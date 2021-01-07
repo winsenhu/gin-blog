@@ -36,6 +36,8 @@ func init() {
     host = sec.Key("HOST").String()
     tablePrefix = sec.Key("TABLE_PREFIX").String()
 
+
+
     db, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", 
         user, 
         password, 
@@ -43,6 +45,7 @@ func init() {
         dbName))
 
     if err != nil {
+        log.Println(host)
         log.Println(err)
     }
 
