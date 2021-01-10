@@ -32,10 +32,11 @@ func init() {
     dbType = sec.Key("TYPE").String()
     dbName = sec.Key("NAME").String()
     user = sec.Key("USER").String()
-    password = sec.Key("PASSWORD").String()
+    // password = sec.Key("PASSWORD").String()
+    // 坑：sec.Key("PASSWORD").String() 会丢失#251
+    password = "SDxkKfNcAcnN#251"
     host = sec.Key("HOST").String()
     tablePrefix = sec.Key("TABLE_PREFIX").String()
-
 
 
     db, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", 
@@ -43,9 +44,9 @@ func init() {
         password, 
         host, 
         dbName))
+    
 
     if err != nil {
-        log.Println(host)
         log.Println(err)
     }
 
