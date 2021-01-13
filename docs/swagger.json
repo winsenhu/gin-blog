@@ -1,0 +1,97 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Golang api of demo",
+        "title": "gin-blog",
+        "termsOfService": "http://github.com",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.cnblogs.com",
+            "email": "×××@qq.com"
+        },
+        "version": "1.0"
+    },
+    "host": "127.0.0.1:8000",
+    "paths": {
+        "/api/v1/tags": {
+            "get": {
+                "description": "新增文章标签",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Name",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "State",
+                        "name": "state",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "CreatedBy",
+                        "name": "created_by",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "修改文章标签",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "State",
+                        "name": "state",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "ModifiedBy",
+                        "name": "modified_by",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

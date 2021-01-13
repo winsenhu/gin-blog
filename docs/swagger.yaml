@@ -1,0 +1,65 @@
+host: 127.0.0.1:8000
+info:
+  contact:
+    email: ×××@qq.com
+    name: API Support
+    url: http://www.cnblogs.com
+  description: Golang api of demo
+  termsOfService: http://github.com
+  title: gin-blog
+  version: "1.0"
+paths:
+  /api/v1/tags:
+    get:
+      description: 新增文章标签
+      parameters:
+      - description: Name
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: State
+        in: query
+        name: state
+        type: integer
+      - description: CreatedBy
+        in: query
+        name: created_by
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+    put:
+      description: 修改文章标签
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: ID
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: State
+        in: query
+        name: state
+        type: integer
+      - description: ModifiedBy
+        in: query
+        name: modified_by
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+swagger: "2.0"
