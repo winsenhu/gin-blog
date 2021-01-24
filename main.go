@@ -1,14 +1,16 @@
 package main
 
 import (
-    "fmt"
-    "log"
-    "syscall"
+	"fmt"
+	"log"
+	"syscall"
 
-    "github.com/fvbock/endless"
+	"github.com/fvbock/endless"
 
-    "gin-blog/routers"
-    "gin-blog/pkg/setting"
+	"gin-blog/models"
+	"gin-blog/pkg/logging"
+	"gin-blog/pkg/setting"
+	"gin-blog/routers"
 )
 
 // @title gin-blog
@@ -22,31 +24,33 @@ import (
 
 //@host 127.0.0.1:8000
 func main() {
-    // router := routers.InitRouter()
+	setting.Setup()
+	models.Setup()
+	logging.Setup()
+	// router := routers.InitRouter()
 
+	// s := &http.Server{
+	//     Addr:           fmt.Sprintf(":%d", setting.HTTPPort),
+	//     Handler:        router,
+	//     ReadTimeout:    setting.ReadTimeout,
+	//     WriteTimeout:   setting.WriteTimeout,
+	//     MaxHeaderBytes: 1 << 20,
+	// }
 
-    // s := &http.Server{
-    //     Addr:           fmt.Sprintf(":%d", setting.HTTPPort),
-    //     Handler:        router,
-    //     ReadTimeout:    setting.ReadTimeout,
-    //     WriteTimeout:   setting.WriteTimeout,
-    //     MaxHeaderBytes: 1 << 20,
-    // }
+	// s.ListenAndServe()
 
-    // s.ListenAndServe()
+	endless.DefaultReadTimeOut = setting.ServerSetting.ReadTimeout
+	endless.DefaultWriteTimeOut = setting.ServerSetting.WriteTimeout
+	endless.DefaultMaxHeaderBytes = 1 << 20
+	endPoint := fmt.Sprintf(":%d", setting.ServerSetting.HttpPort)
 
-    endless.DefaultReadTimeOut = setting.ReadTimeout
-    endless.DefaultWriteTimeOut = setting.WriteTimeout
-    endless.DefaultMaxHeaderBytes = 1 << 20
-    endPoint := fmt.Sprintf(":%d", setting.HTTPPort)
+	server := endless.NewServer(endPoint, routers.InitRouter())
+	server.BeforeBegin = func(add string) {
+		log.Printf("Actual pid is %d", syscall.Getpid())
+	}
 
-    server := endless.NewServer(endPoint, routers.InitRouter())
-    server.BeforeBegin = func(add string) {
-        log.Printf("Actual pid is %d", syscall.Getpid())
-    }
-
-    err := server.ListenAndServe()
-    if err != nil {
-        log.Printf("Server err: %v", err)
-    }
+	err := server.ListenAndServe()
+	if err != nil {
+		log.Printf("Server err: %v", err)
+	}
 }
