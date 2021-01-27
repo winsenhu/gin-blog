@@ -2,8 +2,13 @@ package tag_service
 
 import (
 	"encoding/json"
+	"strconv"
+	"time"
+
+	"github.com/tealeg/xlsx"
 
 	"gin-blog/models"
+	"gin-blog/pkg/export"
 	"gin-blog/pkg/gredis"
 	"gin-blog/pkg/logging"
 	"gin-blog/service/cache_service"
@@ -94,4 +99,54 @@ func (t *Tag) getMaps() map[string]interface{} {
 	}
 
 	return maps
+}
+
+func (t *Tag) Export() (string, error) {
+	tags, err := t.GetAll()
+	if err != nil {
+		return "", err
+	}
+
+	file := xlsx.NewFile()
+	sheet, err := file.AddSheet("标签信息")
+	if err != nil {
+		return "", err
+	}
+
+	titles := []string{"ID", "名称", "创建人", "创建时间", "修改人", "修改时间"}
+	row := sheet.AddRow()
+
+	var cell *xlsx.Cell
+	for _, title := range titles {
+		cell = row.AddCell()
+		cell.Value = title
+	}
+
+	for _, v := range tags {
+		values := []string{
+			strconv.Itoa(v.ID),
+			v.Name,
+			v.CreatedBy,
+			strconv.Itoa(v.CreatedOn),
+			v.ModifiedBy,
+			strconv.Itoa(v.ModifiedOn),
+		}
+
+		row = sheet.AddRow()
+		for _, value := range values {
+			cell = row.AddCell()
+			cell.Value = value
+		}
+	}
+
+	time := strconv.Itoa(int(time.Now().Unix()))
+	filename := "tags-" + time + ".xlsx"
+
+	fullPath := export.GetExcelFullPath() + filename
+	err = file.Save(fullPath)
+	if err != nil {
+		return "", err
+	}
+
+	return filename, nil
 }

@@ -9,6 +9,7 @@ import (
 
 	_ "gin-blog/docs"
 	"gin-blog/middleware/jwt"
+	"gin-blog/pkg/export"
 	"gin-blog/pkg/setting"
 	"gin-blog/pkg/upload"
 	"gin-blog/routers/api"
@@ -25,6 +26,7 @@ func InitRouter() *gin.Engine {
 	gin.SetMode(setting.ServerSetting.RunMode)
 
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
+	r.StaticFS("/export", http.Dir(export.GetExcelFullPath()))
 
 	r.POST("/auth", api.GetAuth)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -41,6 +43,8 @@ func InitRouter() *gin.Engine {
 		apiv1.PUT("/tags/:id", v1.EditTag)
 		//删除指定标签
 		apiv1.DELETE("/tags/:id", v1.DeleteTag)
+		//导出标签
+		r.POST("/tags/export", v1.ExportTag)
 
 		//获取文章列表
 		apiv1.GET("/articles", v1.GetArticles)
